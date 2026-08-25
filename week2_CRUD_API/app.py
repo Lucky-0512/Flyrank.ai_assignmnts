@@ -52,4 +52,36 @@ def create_task(data:entry):
     memory.append(dict_h)
     return {"Created" : "task created successfully! ",'status':201} 
 
+## stage 4
+
+@app.put("/tasks/{id}")
+def update(data:entry,id:int):
+
+    if id > len(memory) or id not in memory[id-1].values():
+        return {"Unknown ID":404}
+
+    else:
+        if data.title:
+            ##now update the title.
+            memory[id-1]["title"] = data.title
+
+        elif data.done:
+            ## pdate the task status.
+            memory[id-1]["done"] = data.done      
+
+    return memory[id-1]        
+
+
+@app.delete("/tasks/{id}")
+def del_task(id:int):
+    if id > len(memory) or id not in memory[id-1].values():
+        return {"Unknown ID, cant delete":404}
+
+    memory.remove(memory[id-1])
+    return {f"task {id} Deleted Successfully!":200}
+    
+### FULL CRUD COMPLETE!
+         
+    
+    
 
