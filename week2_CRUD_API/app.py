@@ -2,6 +2,14 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/")
+'''@app.get("/")
 def greet():
-    return {'msg':"Hello Server!!" ,'status': 200}
+    return {'msg':"Hello Server!!" ,'status': 200}'''
+
+@app.get("/")
+def itemslo():
+    return { "name": "Task API", "version": "1.0", "endpoints": ["/tasks"] }    
+
+@app.get("/health")
+def health():
+    return {'status':'OK'}
