@@ -11,12 +11,6 @@ def greet():
 def itemslo():
     return { "name": "Task API", "version": "1.0", "endpoints": ["/tasks"] }    
 
-class entry(BaseModel):
-    id:int
-    title:str
-    done: bool
-
-
 @app.get("/health")
 def health():
     return {'status':'OK'}
@@ -37,5 +31,25 @@ def get_one(id:int):
     if id > len(memory):
         return { "error": "Task 99 not found", 'status':404 }
     return {"data":memory[id-1],'status':200}
+
+
+## stage 3
+
+# let's create a pydantic model, for validating incming equest JSON structre and elemtn datatypes.
+class entry(BaseModel):
+    id:int | None=None
+    title:str
+    done: bool | None=None
+
+@app.post("/tasks")
+def create_task(data:entry):
+    data.id = len(memory)+1
+    data.done = True
+    dict_h = {'id':data.id,'title':data.title,"done":data.done}
+    if  dict_h=={} or not data.title :
+        return {"Bad request" : "task cannot be empty!",
+                "status":400}
+    memory.append(dict_h)
+    return {"Created" : "task created successfully! ",'status':201} 
 
 
