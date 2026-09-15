@@ -60,3 +60,22 @@ def create_task(data:entry):
     cur.execute("INSERT INTO tasks(id,title,status) values(?,?,?)",(dict_h['id'],dict_h['title'],dict_h['done']))
     con.commit()
     return {"Created" : "task created successfully! ",'status':201} 
+
+
+
+#############################################################################################33333
+# Stage 1: database read endpoints 
+
+@app.get("/tasks")
+def get_tasks():
+    create_3(cur)
+    task_list = read_fromdb(cur)
+    return task_list
+
+@app.get("/tasks/{id}")
+def get_one(id:int):
+    task_list = read_fromdb(cur)
+
+    if id > len(task_list):
+        return { "error": "Task 99 not found", 'status':404 }
+    return {"data":task_list[id-1],'status':200}
