@@ -79,3 +79,48 @@ def get_one(id:int):
     if id > len(task_list):
         return { "error": "Task 99 not found", 'status':404 }
     return {"data":task_list[id-1],'status':200}
+
+
+
+
+@app.put("/tasks/{id}")
+def update(data:entry,id:int):
+
+    task_list = read_fromdb(cur)
+    get_ids = []
+    for i in task_list:
+        get_ids.append(i['id'])
+
+    if id not in get_ids:
+        return {404:'ID not found'}    
+             
+        
+    id = data.id
+    title = data.title
+    status = data.id
+    cur.execute("UPDATE tasks SET title = ? WHERE id = ?",(title,id))
+    cur.execute("UPDATE tasks SET status = ? WHERE id = ?",(status,id))
+    con.commit()
+
+    return {'✅':'task updatd sucessfully'}
+
+
+@app.delete("/tasks/{id}")
+def del_task(id:int):
+    task_list = read_fromdb(cur)
+    get_ids = []
+    for i in task_list:
+        get_ids.append(i['id'])
+
+    if id not in get_ids:
+        return {"Unknown ID, cant delete":404}
+
+    cur.execute("DELETE from tasks where id = ?",(id,))
+    con.commit()
+
+    return {f"task {id} Deleted Successfully!":200}
+    
+### FULL CRUD COMPLETE now with the SQLTE DB!!!!!
+
+
+    
