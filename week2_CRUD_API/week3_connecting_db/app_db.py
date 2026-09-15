@@ -42,13 +42,6 @@ def read_fromdb(cursor):
     return kk   
 ###########################################################
 
-@app.get("/health")
-def health():
-    return {'status':'OK'}
-
-
-#####################################################################
-
 # let's create a pydantic model, for validating incming equest JSON structre and elemtn datatypes.
 class entry(BaseModel):
     id:int
@@ -67,66 +60,3 @@ def create_task(data:entry):
     cur.execute("INSERT INTO tasks(id,title,status) values(?,?,?)",(dict_h['id'],dict_h['title'],dict_h['done']))
     con.commit()
     return {"Created" : "task created successfully! ",'status':201} 
-
-
-#############################################################################################33333
-
-@app.get("/tasks")
-def get_tasks():
-    create_3(cur)
-    task_list = read_fromdb(cur)
-    return task_list
-
-@app.get("/tasks/{id}")
-def get_one(id:int):
-    task_list = read_fromdb(cur)
-
-    if id > len(task_list):
-        return { "error": "Task 99 not found", 'status':404 }
-    return {"data":task_list[id-1],'status':200}
-
-
-
-@app.put("/tasks/{id}")
-def update(data:entry,id:int):
-
-    task_list = read_fromdb(cur)
-    get_ids = []
-    for i in task_list:
-        get_ids.append(i['id'])
-
-    if id not in get_ids:
-        return {404:'ID not found'}    
-             
-        
-    id = data.id
-    title = data.title
-    status = data.id
-    cur.execute("UPDATE tasks SET title = ? WHERE id = ?",(title,id))
-    cur.execute("UPDATE tasks SET status = ? WHERE id = ?",(status,id))
-    con.commit()
-
-    return {'✅':'task updatd sucessfully'}
-
-
-@app.delete("/tasks/{id}")
-def del_task(id:int):
-    task_list = read_fromdb(cur)
-    get_ids = []
-    for i in task_list:
-        get_ids.append(i['id'])
-
-    if id not in get_ids:
-        return {"Unknown ID, cant delete":404}
-
-    cur.execute("DELETE from tasks where id = ?",(id,))
-    con.commit()
-
-    return {f"task {id} Deleted Successfully!":200}
-    
-### FULL CRUD COMPLETE now with the SQLTE DB!!!!!
-
-
-    
-    
-
